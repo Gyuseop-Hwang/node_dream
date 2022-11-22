@@ -1,4 +1,4 @@
-import { IDNotFound, UserNotFound } from '../utils/errors.js'
+import { IDNotFound, UserNotFound, AuthError } from '../utils/errors.js'
 import * as tweetRepository from '../data/tweets.js'
 
 export const readTweets = async (req, res, next) => {
@@ -26,9 +26,9 @@ export const readTweet = async (req, res, next) => {
 }
 
 export const createTweet = async (req, res, next) => {
-  const { text, name, username } = req.body;
+  const { text } = req.body;
 
-  const newTweet = await tweetRepository.create(text, name, username)
+  const newTweet = await tweetRepository.create(text, req.userId)
 
   // tweets.unshift(newTweet);
 
@@ -40,26 +40,49 @@ export const updateTweet = async (req, res, next) => {
 
   const id = req.params.id;
   const text = req.body.text;
+  const tweet = await tweetRepository.getById(id)
 
-  const tweet = await tweetRepository.update(id, text)
+  // const tweet = await tweetRepository.update(id, text)
 
   if (!tweet) {
     return next(new IDNotFound(id))
   }
 
+  if (tweet.userId !== req.userId) {
+    return next(new AuthError())
+  }
+
+  const updated = await tweetRepository.update(id, text)
+
   // res.status(201).send("tweet was updated")
-  res.status(200).json(tweet)
+  res.status(200).json(updated)
 }
 
 export const deleteTweet = async (req, res, next) => {
 
   const id = req.params.id;
 
-  const tweetIndex = await tweetRepository.deleteById(id);
+  const tweet = await tweetRepository.getById(id)
 
-  if (tweetIndex < 0) {
-    return next(new IDNotFound(req.params.id))
+  if (!tweet) {
+    return next(new IDNotFound(id))
   }
+
+  if (tweet.userId !== req.userId) {
+    return next(new AuthError())
+  }
+
+  await tweetRepository.deleteById(id);
+
+  // if (tweetIndex < 0) {
+  //   return next(new IDNotFound(req.params.id))
+  // }
+
+  // const tweets = await tweetRepository.getAll()
+
+  // if (tweets[tweetIndex].userId !== req.userId) {
+  //   return next(new AuthError())
+  // }
 
   // res.status(204).json({ message: "tweet was deleted" })
   res.sendStatus(204)

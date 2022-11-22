@@ -14,14 +14,47 @@ class IDNotFound extends AppError {
 
 class UserNotFound extends AppError {
   constructor(username) {
-    super(400, `username ${username} not exists`);
+    super(400, username ? `username ${username} not exists` : "No users");
   }
 }
 
 class PageNotFoundError extends AppError {
   constructor() {
-    super(404, "URL NOT EXISTS");
+    super(404, "url is not exists");
   }
 }
 
-export { IDNotFound, UserNotFound, PageNotFoundError }
+class SignupError extends AppError {
+  constructor() {
+    super(409, "username already exists")
+  }
+}
+
+class LoginError extends AppError {
+  constructor() {
+    super(401, "username or password is not correct")
+  }
+}
+
+class LoginRequired extends AppError {
+  constructor() {
+    super(401, "login is required")
+  }
+}
+
+class AuthError extends AppError {
+  constructor() {
+    super(403, "you are not authenticated")
+  }
+}
+
+
+export {
+  IDNotFound,
+  UserNotFound,
+  PageNotFoundError,
+  SignupError,
+  LoginError,
+  LoginRequired,
+  AuthError
+}

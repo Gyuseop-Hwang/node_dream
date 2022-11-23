@@ -6,6 +6,8 @@ import helmet from 'helmet';
 import 'express-async-errors';
 import { tweetsRouter, authRouter } from './router/index.js'
 import errorController from './controller/errors.js'
+import { config } from './utils/index.js';
+import { Server } from 'socket.io'
 
 const app = express();
 
@@ -22,8 +24,24 @@ app.use(errorController.pageNotFound)
 
 app.use(errorController.mainError)
 
-const port = process.env.PORT || 8080
+const port = config.server.PORT
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`listening on port ${port}`)
 })
+
+const socketIO = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+})
+
+socketIO.on("connection", (socket) => {
+  console.log("Client here")
+  // socketIO.emit("dwitter", "Hello")
+  // socketIO.emit("dwitter", "Hello")
+})
+
+// setInterval(() => {
+//   socketIO.emit("dwitter", "hello")
+// }, 1000)

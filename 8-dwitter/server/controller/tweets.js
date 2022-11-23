@@ -6,9 +6,9 @@ export const readTweets = async (req, res, next) => {
   const username = req.query.username
   const tweets = await (username ? tweetRepository.getAllByUsername(username) : tweetRepository.getAll());
 
-  if (tweets.length === 0) {
-    return next(new UserNotFound(username));
-  }
+  // if (tweets.length === 0) {
+  //   return next(new UserNotFound(username));
+  // }
 
   return res.status(200).json(tweets);
 }

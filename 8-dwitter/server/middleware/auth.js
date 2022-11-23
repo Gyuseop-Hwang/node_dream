@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { LoginRequired } from '../utils/errors.js'
 import * as authRepository from '../data/auth.js'
-const jwtKey = process.env.JWTKEY || "jwtSecret";
+import { config } from '../utils/index.js'
 
 const isAuth = (req, res, next) => {
 
@@ -13,7 +13,7 @@ const isAuth = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
 
-  jwt.verify(token, jwtKey, async (err, decode) => {
+  jwt.verify(token, config.jwt.jwtSecret, async (err, decode) => {
 
     if (err) {
       return next(new LoginRequired())

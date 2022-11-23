@@ -8,12 +8,24 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AuthErrorEventBus } from './context/AuthContext';
 import HttpClient from './network/http';
+import TokenStorage from './db/token';
+import socket from 'socket.io-client';
 
 const baseURL = process.env.REACT_APP_BASE_URL;
-const httpClient = new HttpClient(baseURL)
+const tokenStorage = new TokenStorage();
+const httpClient = new HttpClient(baseURL);
 const authErrorEventBus = new AuthErrorEventBus();
-const authService = new AuthService();
-const tweetService = new TweetService(httpClient);
+const authService = new AuthService(httpClient, tokenStorage);
+const tweetService = new TweetService(httpClient, tokenStorage);
+
+const socketIO = socket(baseURL);
+socketIO.on("connect_error", (err) => {
+  console.log("socket error", err);
+})
+
+socketIO.on("dwitter", msg => {
+  console.log(msg)
+})
 
 ReactDOM.render(
   <React.StrictMode>

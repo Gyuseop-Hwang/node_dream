@@ -2,11 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { SignupError, LoginError } from "../utils/errors.js";
 import * as authRepository from '../data/auth.js'
-
-const bcryptSaltRounds = 12;
-const jwtKey = process.env.JWTKEY || "jwtSecret";
-const expiresIn = "2d"
-
+import { config } from '../utils/index.js'
 
 export const signup = async (req, res, next) => {
 
@@ -18,9 +14,9 @@ export const signup = async (req, res, next) => {
     return next(new SignupError());
   }
 
-  const hashedPassword = await bcrypt.hash(password, bcryptSaltRounds);
+  const hashedPassword = await bcrypt.hash(password, config.bcrypt.bcryptSaltRounds);
 
-  const userId = authRepository.createUser({
+  const userId = await authRepository.createUser({
     username,
     password: hashedPassword,
     name,
@@ -54,7 +50,7 @@ export const login = async (req, res, next) => {
 }
 
 function createToken(id) {
-  return jwt.sign({ id }, jwtKey, { expiresIn })
+  return jwt.sign({ id }, config.jwt.jwtSecret, { expiresIn: config.jwt.jwtExpiresInSec })
 }
 
 export const me = async (req, res, next) => {

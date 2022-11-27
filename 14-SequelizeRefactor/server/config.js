@@ -19,10 +19,29 @@ export const config = {
   },
   port: parseInt(required('PORT', 8080)),
   db: {
-    host: required('DB_HOST'),
-    user: required("DB_USER"),
-    database: required("DB_DATABASE"),
-    password: required("DB_PASSWORD")
+    development: {
+      username: "root",
+      password: "Fhqls78@@9",
+      database: "dwitter",
+      host: "127.0.0.1",
+      dialect: "mysql",
+      logging: false,
+    },
+    test: {
+      username: "root",
+      password: "Fhqls78@@9",
+      database: "dwitter_test",
+      host: "127.0.0.1",
+      dialect: "mysql",
+      logging: false,
+    },
+    production: {
+      username: "root",
+      password: null,
+      database: "database_production",
+      host: "127.0.0.1",
+      dialect: "mysql"
+    }
   },
   cors: {
     allowedOrigin: required('CORS_ALLOW_ORIGIN')

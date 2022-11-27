@@ -7,18 +7,14 @@ import tweetsRouter from './router/tweets.js';
 import authRouter from './router/auth.js';
 import { config } from './config.js';
 import { initSocket } from './connection/socket.js';
-// import { db } from './db/database.js'
-import { sequelize } from './db/database.js';
+// import { connenctDB } from './db/database.js';
+import { mongooseConnect } from './db/database.js';
 
 const app = express();
-const corsOption = {
-  origin: config.cors.allowedOrigin,
-  optionsSuccessStatus: 200
-}
 
 app.use(express.json());
 app.use(helmet());
-app.use(cors(corsOption));
+app.use(cors());
 app.use(morgan('tiny'));
 
 app.use('/tweets', tweetsRouter);
@@ -34,13 +30,20 @@ app.use((error, req, res, next) => {
 });
 
 
-// db.getConnection().then(connection => console.log(connection));
-sequelize.sync()
+mongooseConnect()
   .then(() => {
-    // console.log(result);
-    console.log(`Server is started... ${new Date()}`)
-    const server = app.listen(config.port);
+    console.log("database Connected")
+    const server = app.listen(config.host.port);
     initSocket(server);
   })
   .catch(console.error)
+
+// connenctDB()
+//   .then(db => {
+//     console.log("database connected")
+//     const server = app.listen(config.host.port);
+//     initSocket(server);
+//   })
+//   .catch(console.error)
+
 

@@ -8,7 +8,8 @@ import authRouter from './router/auth.js';
 import { config } from './config.js';
 import { initSocket } from './connection/socket.js';
 // import { db } from './db/database.js'
-import { sequelize } from './db/database.js';
+// import { sequelize } from './db/database.js';
+import db from './models/index.js'
 
 const app = express();
 const corsOption = {
@@ -34,8 +35,8 @@ app.use((error, req, res, next) => {
 });
 
 
-// db.getConnection().then(connection => console.log(connection));
-sequelize.sync()
+
+db.sequelize.sync({ force: false })
   .then(() => {
     // console.log(result);
     console.log(`Server is started... ${new Date()}`)
@@ -43,4 +44,15 @@ sequelize.sync()
     initSocket(server);
   })
   .catch(console.error)
+
+// db.getConnection().then(connection => console.log(connection));
+
+// sequelize.sync()
+//   .then(() => {
+//     // console.log(result);
+//     console.log(`Server is started... ${new Date()}`)
+//     const server = app.listen(config.port);
+//     initSocket(server);
+//   })
+//   .catch(console.error)
 

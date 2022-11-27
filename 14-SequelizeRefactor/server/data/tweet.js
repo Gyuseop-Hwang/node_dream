@@ -1,8 +1,8 @@
 // import * as userRepository from './auth.js';
-import { db } from '../db/database.js'
-import { sequelize } from '../db/database.js'
-import SQ from 'sequelize';
-import { User } from './auth.js'
+// import { db } from '../db/database.js'
+// import { sequelize } from '../db/database.js'
+// import SQ from 'sequelize';
+// import { User } from './auth.js'
 
 // let tweets = [
 //   {
@@ -23,25 +23,25 @@ import { User } from './auth.js'
 
 // const ORDER_DESC = "ORDER BY tw.createdAt DESC"
 
-const DataTypes = SQ.DataTypes;
-const Sequelize = SQ.Sequelize;
+// const DataTypes = SQ.DataTypes;
+// const Sequelize = SQ.Sequelize;
 
-const Tweet = sequelize.define("tweet", {
-  id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  text: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  }
-})
-// User.hasMany(Tweet)
-Tweet.belongsTo(User)
+// const Tweet = sequelize.define("tweet", {
+//   id: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//     autoIncrement: true,
+//     primaryKey: true
+//   },
+//   text: {
+//     type: DataTypes.TEXT,
+//     allowNull: false,
+//   }
+// })
 
-const INCLUDE_USER = {
+// Tweet.belongsTo(User)
+
+// const INCLUDE_USER = {
   // attributes: [
   //   "id",
   //   "text",
@@ -51,22 +51,22 @@ const INCLUDE_USER = {
   //   [Sequelize.col("user.username"), "username"],
   //   [Sequelize.col("user.url"), "url"],
   // ],
-  include: [{
-    model: User/*, attributes: []/*attributes: ["name", "username", "url"]*/
-  }]
+//   include: [{
+//     model: User/*, attributes: []/*attributes: ["name", "username", "url"]*/
+//   }]
 
-}
+// }
 
-const ORDER_DESC = {
-  order: [["createdAt", "DESC"]]
-}
+// const ORDER_DESC = {
+//   order: [["createdAt", "DESC"]]
+// }
 
-export async function getAll() {
+// export async function getAll() {
 
-  return await Tweet.findAll({
-    ...INCLUDE_USER,
-    ...ORDER_DESC
-  })
+//   return await Tweet.findAll({
+//     ...INCLUDE_USER,
+//     ...ORDER_DESC
+//   })
 
   // const query = `${SELECT_JOIN} ${ORDER_DESC}`
 
@@ -82,18 +82,18 @@ export async function getAll() {
   //     return { ...tweet, username, name, url };
   //   })
   // );
-}
+// }
 
-export async function getAllByUsername(username) {
+// export async function getAllByUsername(username) {
 
-  return await Tweet.findAll({
-    ...INCLUDE_USER,
-    ...ORDER_DESC,
-    include: {
-      ...INCLUDE_USER.include[0],
-      where: { username }
-    }
-  })
+//   return await Tweet.findAll({
+//     ...INCLUDE_USER,
+//     ...ORDER_DESC,
+//     include: {
+//       ...INCLUDE_USER.include[0],
+//       where: { username }
+//     }
+//   })
 
 
   // const query = `${SELECT_JOIN} WHERE us.username = ? ${ORDER_DESC}`
@@ -105,14 +105,14 @@ export async function getAllByUsername(username) {
   // return getAll().then((tweets) =>
   //   tweets.filter((tweet) => tweet.username === username)
   // );
-}
+// }
 
-export async function getById(id) {
+// export async function getById(id) {
 
-  return await Tweet.findOne({
-    where: { id },
-    ...INCLUDE_USER
-  })
+//   return await Tweet.findOne({
+//     where: { id },
+//     ...INCLUDE_USER
+//   })
 
   // const query = `${SELECT_JOIN} WHERE tw.id = ? ${ORDER_DESC}`
 
@@ -127,13 +127,13 @@ export async function getById(id) {
   // }
   // const { username, name, url } = await userRepository.findById(found.userId);
   // return { ...found, username, name, url };
-}
+// }
 
-export async function create(text, userId) {
+// export async function create(text, userId) {
 
-  return Tweet.create({ text, userId }).then(data => {
-    return getById(data.dataValues.id)
-  })
+//   return Tweet.create({ text, userId }).then(data => {
+//     return getById(data.dataValues.id)
+//   })
 
   // const query = "INSERT INTO tweets (text, createdAt, userId) VALUES(?, ?, ?)"
   // return db.execute(query, [
@@ -153,15 +153,15 @@ export async function create(text, userId) {
   // };
   // tweets = [tweet, ...tweets];
   // return getById(tweet.id);
-}
+// }
 
-export async function update(id, text) {
+// export async function update(id, text) {
 
 
-  return Tweet.findByPk(id, INCLUDE_USER).then(tweet => {
-    tweet.text = text;
-    return tweet.save()
-  })
+//   return Tweet.findByPk(id, INCLUDE_USER).then(tweet => {
+//     tweet.text = text;
+//     return tweet.save()
+//   })
 
   // const query = `UPDATE tweets SET text = ? WHERE id = ?`
 
@@ -178,13 +178,13 @@ export async function update(id, text) {
   //   tweet.text = text;
   // }
   // return getById(tweet.id);
-}
+// }
 
-export async function remove(id) {
+// export async function remove(id) {
 
-  return Tweet.findByPk(id).then(tweet => {
-    tweet.destroy()
-  })
+//   return Tweet.findByPk(id).then(tweet => {
+//     tweet.destroy()
+//   })
 
 
   // const query = "DELETE FROM tweets WHERE id = ?"
@@ -192,4 +192,4 @@ export async function remove(id) {
 
 
   // tweets = tweets.filter((tweet) => tweet.id !== id);
-}
+// }
